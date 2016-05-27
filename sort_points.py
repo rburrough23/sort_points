@@ -37,7 +37,7 @@ with open(options.innerfile) as innerstream:
 
 unique=numpy.unique(d[3])
 
-print unique
+print (unique)
 
 for value in unique:
     iso=d[:,(d[3]==value)]
@@ -52,5 +52,12 @@ for value in unique:
         xs,ys,zs=numpy.transpose(points)
         distance2=(x-xs)**2+(y-ys)**2+(z-zs)**2
         nnindex=numpy.where(distance2==distance2.min())[0][0]
-    sorted_points[len(sorted_points)-1]=points[0]
-    print sorted_points
+    sorted_points[len(sorted_points)-1]=points
+        #print(sorted_points)    
+
+
+
+
+print(sorted_points[1])
+
+    
