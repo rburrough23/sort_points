@@ -2,9 +2,12 @@
 
 # FEMM Helper by Jeff Martin
 
-import numpy
+import numpy as np
 import math
 from optparse import OptionParser
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits import mplot3d
 
 
 parser = OptionParser()
@@ -33,31 +36,50 @@ parser.add_option("-f", "--file", dest="filename", default="femm_helper.fem",
 
 
 with open(options.innerfile) as innerstream:
-    d=numpy.loadtxt(innerstream,comments="%",unpack=True)
+    d=np.loadtxt(innerstream,comments="%",unpack=True)
 
-unique=numpy.unique(d[3])
+unique=np.unique(d[3])
 
 print (unique)
 
 for value in unique:
     iso=d[:,(d[3]==value)]
-    points=numpy.transpose(iso[:3])
-    sorted_points=numpy.transpose(iso[:3])
+    points=np.transpose(iso[:3])
+    sorted_points=np.transpose(iso[:3])
     nnindex=0
     for i in range(len(sorted_points)-1):
         point=points[nnindex]
         sorted_points[i]=point
         x,y,z=point
-        points=numpy.delete(points,nnindex,0)
-        xs,ys,zs=numpy.transpose(points)
+        points=np.delete(points,nnindex,0)
+        xs,ys,zs=np.transpose(points)
         distance2=(x-xs)**2+(y-ys)**2+(z-zs)**2
-        nnindex=numpy.where(distance2==distance2.min())[0][0]
+        nnindex=np.where(distance2==distance2.min())[0][0]
     sorted_points[len(sorted_points)-1]=points
-        #print(sorted_points)    
+    f=open('sortedPoints.dat','ab')
+    np.savetxt(f, sorted_points)
+    f.close 
+
+d=np.loadtxt('sortedPoints.dat')
+p=np.transpose(d)
+
+X=p[0]
+Y=p[1]
+Z=p[2]
+
+fig=plt.figure
+ax=plt.axes(projection='3d')
+
+ax.scatter(X,Y,Z)
+plt.suptitle('Extracted Traces')
+ax.set_xlabel('x(m)')
+ax.set_ylabel('y(m)')
+ax.set_zlabel('z(m)')
+plt.show()
+fig.savegif('extracted_traces.jpg')
 
 
 
 
-print(sorted_points[1])
 
     
